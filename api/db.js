@@ -10,10 +10,8 @@ async function getDb() {
   if (cached.db) return cached.db;
   if (!uri) throw new Error("MONGODB_URI is not set");
   const client = await MongoClient.connect(uri, {});
-  const db = client.db(dbName);
   cached.client = client;
-  cached.db = db;
-  return db;
+  cached.db = client.db(dbName);
+  return cached.db;
 }
-
 module.exports = { getDb };

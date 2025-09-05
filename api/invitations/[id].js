@@ -1,23 +1,30 @@
-// /api/invitations/[id].js
 const { getDb } = require("../db");
 const { readJson, send } = require("../_utils");
+const { ObjectId } = require("mongodb");
+
+const ALLOW = [
+  "ino",
+  "groomName",
+  "brideName",
+  "date",
+  "time",
+  "cover",
+  "bg",
+  "title1",
+  "content",
+  "title",
+  "price",
+  "options",
+];
 
 module.exports = async (req, res) => {
   try {
-    const db = await getDb();
-    const col = db.collection("invitations");
-
-    // URL에서 id 추출
     const id = req.query?.id || req.url.split("/").pop();
     if (!id) return send(res, 400, { error: "id required" });
 
-    const { ObjectId } = require("mongodb");
-    let _id;
-    try {
-      _id = new ObjectId(id);
-    } catch {
-      return send(res, 400, { error: "invalid id" });
-    }
+    const db = await getDb();
+    const col = db.collection("invitations");
+    const _id = new ObjectId(id);
 
     if (req.method === "GET") {
       const doc = await col.findOne({ _id });
@@ -27,23 +34,11 @@ module.exports = async (req, res) => {
 
     if (req.method === "PUT") {
       const body = await readJson(req);
-      // 허용 필드만 업데이트
-      const patch = {
-        ...(body.title != null && { title: body.title }),
-        ...(body.price != null && { price: body.price }),
-        ...(body.options && { options: body.options }),
-        ...(body.cover && { cover: body.cover }),
-        ...(body.bg && { bg: body.bg }),
-        ...(body.groomName && { groomName: body.groomName }),
-        ...(body.brideName && { brideName: body.brideName }),
-        ...(body.date && { date: body.date }),
-        ...(body.time && { time: body.time }),
-        ...(body.content && { content: body.content }),
-        ...(body.title1 && { title1: body.title1 }),
-      };
+      const patch = {};
+      for (const k of ALLOW) if (k in body) patch[k] = body[k];
       await col.updateOne({ _id }, { $set: patch });
-      const after = await col.findOne({ _id });
-      return send(res, 200, after);
+      const doc = await col.findOne({ _id });
+      return send(res, 200, doc);
     }
 
     if (req.method === "DELETE") {

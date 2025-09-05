@@ -1,29 +1,20 @@
-// src/components/header-and-footer/Header.jsx
+// src/components/header-and-footer/Header.jsx  (핵심만 교체)
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../features/auth/AuthContext";
 import { Petals } from "../../utils/Petals";
 import logomain from "../../art/logomain.png";
-import { useAuth } from "../../features/auth/AuthContext"; // ✅ 여기!
 
-function Header() {
-  const { user, logout } = useAuth(); // ✅ 인증 상태
+export default function Header() {
+  const { user, logout } = useAuth(); // ✅ 컨텍스트 사용
   const nav = useNavigate();
+  const display = user?.name || (user?.email ? user.email.split("@")[0] : "");
 
   const onLogout = () => {
     logout();
-    nav("/"); // 로그아웃 후 홈으로
+    alert("로그아웃 되었습니다.");
+    nav("/");
   };
-
-  // 공통 메뉴
-  const menu = [
-    { to: "/", label: "Home" },
-    { to: "/invitation-cards", label: "모바일 청첩장 디자인" },
-    { to: "/ticket", label: "식권" },
-    { to: "/letter", label: "편지봉투" },
-    { to: "/frame", label: "액자" },
-    { to: "/review", label: "고객후기" },
-    { to: "/faq", label: "자주 묻는 질문" },
-  ];
 
   return (
     <header
@@ -32,7 +23,7 @@ function Header() {
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: "#fff",
+        background: "#fff",
         borderBottom: "1px solid #eee",
         zIndex: 9999,
         padding: "15px 0",
@@ -41,16 +32,18 @@ function Header() {
         justifyContent: "space-between",
       }}
     >
-      {/* 로고 */}
       <div style={{ marginLeft: "40px" }}>
         <Link to="/">
-          <img src={logomain} alt="Logo" style={{ height: 40 }} />
+          <img
+            src={logomain}
+            alt="Logo"
+            style={{ height: "40px", cursor: "pointer" }}
+          />
         </Link>
       </div>
 
       <Petals />
 
-      {/* 가운데 메뉴 */}
       <nav
         style={{
           display: "flex",
@@ -61,88 +54,56 @@ function Header() {
           flexGrow: 1,
         }}
       >
-        {menu.map((m) => (
-          <Link
-            key={m.to}
-            to={m.to}
-            className="menu-link"
-            style={{
-              position: "relative",
-              textDecoration: "none",
-              color: "#000",
-              paddingBottom: 5,
-            }}
-          >
-            {m.label}
-          </Link>
-        ))}
-      </nav>
+        <Link to="/" className="menu-link">
+          Home
+        </Link>
+        <Link to="/invitation-cards" className="menu-link">
+          모바일 청첩장 디자인
+        </Link>
+        <Link to="/ticket" className="menu-link">
+          식권
+        </Link>
+        <Link to="/letter" className="menu-link">
+          편지봉투
+        </Link>
+        <Link to="/frame" className="menu-link">
+          액자
+        </Link>
+        <Link to="/review" className="menu-link">
+          고객후기
+        </Link>
+        <Link to="/faq" className="menu-link">
+          자주 묻는 질문
+        </Link>
 
-      {/* 우측: 로그인/회원가입 ↔ 사용자명/로그아웃 */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-          marginRight: 20,
-        }}
-      >
-        {user ? (
-          <>
-            <span style={{ fontSize: 14, color: "#555" }}>
-              {user.name || user.email} 님
-            </span>
+        {/* ✅ 오른쪽 로그인/로그아웃 영역 */}
+        {!user ? (
+          <Link to="/login" className="menu-link">
+            로그인
+          </Link>
+        ) : (
+          <span style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <span style={{ color: "#666" }}>{display}님</span>
             <button
               onClick={onLogout}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#ff7fa9",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
+              className="menu-link"
+              style={{ background: "none", border: "none", cursor: "pointer" }}
             >
               로그아웃
             </button>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className="menu-link"
-              style={{ textDecoration: "none", color: "#000" }}
-            >
-              로그인
-            </Link>
-            <Link
-              to="/register"
-              className="menu-link"
-              style={{ textDecoration: "none", color: "#000" }}
-            >
-              회원가입
-            </Link>
-          </>
+          </span>
         )}
-      </div>
+      </nav>
 
-      {/* hover 효과 (기존과 동일) */}
-      <style>
-        {`
-          .menu-link::after {
-            content: "";
-            position: absolute;
-            bottom: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 0%; height: 2px;
-            background-color: #ff7fa9;
-            transition: width .3s ease;
-          }
-          .menu-link:hover::after { width: 100%; }
-          .menu-link:hover { color: #ff7fa9; }
-        `}
-      </style>
+      <div style={{ width: "60px", marginRight: "20px" }} />
+
+      <style>{`
+        .menu-link{ position:relative; text-decoration:none; color:#000; padding-bottom:5px; }
+        .menu-link::after{ content:""; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+          width:0%; height:2px; background-color:#ff7fa9; transition:width .3s ease; }
+        .menu-link:hover::after{ width:100%; }
+        .menu-link:hover{ color:#ff7fa9; }
+      `}</style>
     </header>
   );
 }
-
-export default Header;

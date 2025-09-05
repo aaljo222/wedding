@@ -1,32 +1,44 @@
 import React, { useEffect, useState } from "react";
+import {
+  listInvitations,
+  removeInvitation,
+} from "../../services/invitationsApi";
 import { Link } from "react-router-dom";
-import { listInvitations, deleteInvitation } from "../../api/invitations";
-import "../../css/InvitationList.css";
-import logoImage from "../../art/logo.png";
 
 export default function InvitationList() {
-  const [invData, setInvData] = useState([]);
+  const [inv, setInv] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
   useEffect(() => {
-    (async () => setInvData(await listInvitations()))();
+    (async () => {
+      try {
+        setLoading(true);
+        setErr("");
+        const list = await listInvitations();
+        setInv(list);
+      } catch (e) {
+        setErr(e.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   const onDelete = async (id) => {
-    if (!window.confirm("삭제하시겠어요?")) return;
+    if (!window.confirm("정말 삭제할까요?")) return;
     try {
-      await deleteInvitation(id);
-      setInvData((v) => v.filter((i) => String(i._id) !== String(id)));
+      await removeInvitation(id);
+      setInv((prev) => prev.filter((d) => String(d._id) !== String(id)));
     } catch (e) {
-      alert(e.message);
+      alert(e.message || "삭제 실패");
     }
   };
 
   if (loading) return <div className="wl-page">불러오는 중…</div>;
   if (err) return <div className="wl-page text-red-600">{err}</div>;
 
-  if (!Array.isArray(invData) || invData.length === 0) {
+  if (!inv.length)
     return (
       <div className="wl-page">
         <div className="wl-empty">
@@ -38,51 +50,48 @@ export default function InvitationList() {
         </div>
       </div>
     );
-  }
 
   return (
     <div className="wl-page">
       <div className="wl-grid">
-        {invData.map((i) => {
-          const id = i._id || i.id;
-          const bg = i.bg || "#fff8f7";
-          return (
-            <article
-              key={id}
-              className="wl-card"
-              style={{ backgroundColor: bg }}
-            >
-              <div className="wl-cover">
-                {i.cover ? (
-                  <img src={i.cover} alt="" />
-                ) : (
-                  <img src={logoImage} alt="THREE ORGANIC" />
-                )}
-              </div>
-
-              <h1 className="wl-names">
-                <span className="wl-name">{i.groomName}</span>
-                <span className="wl-amp">&</span>
-                <span className="wl-name">{i.brideName}</span>
-              </h1>
-
-              <footer className="wl-actions">
-                <Link
-                  to={`/invitation-edit/${id}`}
-                  className="wl-btn wl-btn--primary"
-                >
-                  편집하기
-                </Link>
-                <button
-                  onClick={() => onDelete(id)}
-                  className="wl-btn wl-btn--ghost"
-                >
-                  삭제하기
-                </button>
-              </footer>
-            </article>
-          );
-        })}
+        {inv.map((i) => (
+          <article
+            key={i._id}
+            className="wl-card"
+            style={{ background: i.bg || "#fff" }}
+          >
+            <div className="wl-cover">
+              {i.cover ? (
+                <img src={i.cover} alt="" />
+              ) : (
+                <div className="wl-cover--pattern" />
+              )}
+            </div>
+            <h1 className="wl-names">
+              <span className="wl-name">{i.groomName}</span>
+              <span className="wl-amp">&</span>
+              <span className="wl-name">{i.brideName}</span>
+            </h1>
+            <section className="wl-intro">
+              {i.title1 && <h2 className="wl-title">{i.title1}</h2>}
+              {i.content && <p className="wl-body">{i.content}</p>}
+            </section>
+            <footer className="wl-actions">
+              <Link
+                to={`/invitation-edit/${i._id}`}
+                className="wl-btn wl-btn--primary"
+              >
+                편집하기
+              </Link>
+              <button
+                className="wl-btn wl-btn--ghost"
+                onClick={() => onDelete(i._id)}
+              >
+                삭제하기
+              </button>
+            </footer>
+          </article>
+        ))}
       </div>
 
       <div className="wl-add-container">

@@ -1,130 +1,95 @@
 import React, { useState } from "react";
+import { createInvitation } from "../../services/invitationsApi";
 import { useNavigate } from "react-router-dom";
-import { createInvitation } from "../../api/invitations";
-import { AccordionSection } from "./AccordionSection";
 
 export default function InvitationAdd() {
   const nav = useNavigate();
   const [form, setForm] = useState({
     title: "",
+    title1: "",
     groomName: "",
     brideName: "",
     date: "",
     time: "",
-    price: 0,
-    options: {},
     cover: "",
     bg: "#fff8f7",
     content: "",
-    title1: "",
+    price: 0,
+    options: {},
   });
-  const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
 
-  const change = (e) =>
-    setForm((v) => ({ ...v, [e.target.name]: e.target.value }));
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // 최소 title 은 꼭 보내세요. title 없으면 400 반환하게 해둠
-    await createInvitation({
-      title,
-      price,
-      groomName,
-      brideName,
-      date,
-      time,
-      cover,
-      bg,
-      content,
-      title1,
-    });
-    navigate("/invitation-list");
+    try {
+      setErr("");
+      await createInvitation(form);
+      alert("저장되었습니다");
+      nav("/invitation-list");
+    } catch (e) {
+      setErr(e.message || "저장 실패");
+    }
   };
 
   return (
-    <form onSubmit={onSubmit} className="max-w-3xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-bold">새 청첩장</h1>
+    <form className="max-w-2xl mx-auto p-6 space-y-3" onSubmit={onSubmit}>
+      <h1 className="text-xl font-bold">청첩장 추가</h1>
       {err && <p className="text-red-600">{err}</p>}
-
-      <AccordionSection title="기본 정보" defaultOpen>
-        <div className="grid grid-cols-2 gap-3">
-          <input
-            name="title"
-            placeholder="제목"
-            onChange={change}
-            className="border p-2 rounded"
-          />
-          <input
-            name="price"
-            type="number"
-            placeholder="가격"
-            onChange={change}
-            className="border p-2 rounded"
-          />
-          <input
-            name="groomName"
-            placeholder="신랑 이름"
-            onChange={change}
-            className="border p-2 rounded"
-          />
-          <input
-            name="brideName"
-            placeholder="신부 이름"
-            onChange={change}
-            className="border p-2 rounded"
-          />
-          <input
-            name="date"
-            type="date"
-            onChange={change}
-            className="border p-2 rounded"
-          />
-          <input
-            name="time"
-            type="time"
-            onChange={change}
-            className="border p-2 rounded"
-          />
-        </div>
-      </AccordionSection>
-
-      <AccordionSection title="디자인">
+      <input
+        name="title"
+        placeholder="상품명(노출용)"
+        className="input"
+        onChange={onChange}
+      />
+      <input
+        name="title1"
+        placeholder="카드 제목"
+        className="input"
+        onChange={onChange}
+      />
+      <div className="grid grid-cols-2 gap-3">
         <input
-          name="cover"
-          placeholder="커버 이미지 URL"
-          onChange={change}
-          className="border p-2 rounded w-full"
+          name="groomName"
+          placeholder="신랑 이름"
+          className="input"
+          onChange={onChange}
         />
         <input
-          name="bg"
-          placeholder="배경색 (예: #fff8f7)"
-          onChange={change}
-          className="border p-2 rounded w-full mt-2"
+          name="brideName"
+          placeholder="신부 이름"
+          className="input"
+          onChange={onChange}
         />
-      </AccordionSection>
-
-      <AccordionSection title="문구">
-        <input
-          name="title1"
-          placeholder="부제(예: INVITATION)"
-          onChange={change}
-          className="border p-2 rounded w-full"
-        />
-        <textarea
-          name="content"
-          placeholder="소개 문구"
-          onChange={change}
-          className="border p-2 rounded w-full mt-2"
-        />
-      </AccordionSection>
-
-      <button
-        disabled={saving}
-        className="rounded-xl bg-black text-white px-4 py-3"
-      >
-        {saving ? "저장중…" : "저장"}
-      </button>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <input type="date" name="date" className="input" onChange={onChange} />
+        <input type="time" name="time" className="input" onChange={onChange} />
+      </div>
+      <input
+        name="cover"
+        placeholder="커버 이미지 URL"
+        className="input"
+        onChange={onChange}
+      />
+      <input
+        name="bg"
+        placeholder="배경색 (예: #fff8f7)"
+        className="input"
+        onChange={onChange}
+      />
+      <textarea
+        name="content"
+        rows={3}
+        placeholder="소개/본문"
+        className="textarea"
+        onChange={onChange}
+      />
+      <button className="btn-primary">저장</button>
     </form>
   );
 }

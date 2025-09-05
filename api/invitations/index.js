@@ -1,6 +1,20 @@
-// /api/invitations/index.js
 const { getDb } = require("../db");
 const { readJson, send } = require("../_utils");
+
+const ALLOW = [
+  "ino",
+  "groomName",
+  "brideName",
+  "date",
+  "time",
+  "cover",
+  "bg",
+  "title1",
+  "content",
+  "title",
+  "price",
+  "options",
+];
 
 module.exports = async (req, res) => {
   try {
@@ -14,14 +28,15 @@ module.exports = async (req, res) => {
 
     if (req.method === "POST") {
       const body = await readJson(req);
-      if (!body?.title) return send(res, 400, { error: "title required" });
-      const r = await col.insertOne({
-        title: body.title,
-        price: body.price ?? 0,
-        options: body.options ?? {},
-        createdAt: new Date(),
-      });
-      return send(res, 201, { _id: r.insertedId });
+      if (!body?.title && !body?.title1) {
+        return send(res, 400, { error: "title or title1 is required" });
+      }
+      const doc = Object.fromEntries(
+        ALLOW.map((k) => [k, body[k] ?? (k === "options" ? {} : null)])
+      );
+      doc.createdAt = new Date();
+      const r = await col.insertOne(doc);
+      return send(res, 201, { _id: r.insertedId, ...doc });
     }
 
     return send(res, 405, { error: "Method Not Allowed" });

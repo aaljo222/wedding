@@ -1,11 +1,11 @@
-// /api/_utils.js  (선택: 각 파일에 복붙해도 됩니다)
+// 공용 유틸
 function readJson(req) {
   return new Promise((resolve, reject) => {
     let data = "";
-    req.on("data", (chunk) => (data += chunk));
+    req.on("data", (c) => (data += c));
     req.on("end", () => {
       try {
-        resolve(JSON.parse(data || "{}"));
+        resolve(data ? JSON.parse(data) : {});
       } catch (e) {
         reject(e);
       }
