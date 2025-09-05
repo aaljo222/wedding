@@ -142,11 +142,7 @@ export default function InvitationEdit() {
         >
           {saving ? "저장중…" : "저장"}
         </button>
-        <button
-          type="button"
-          onClick={onDelete}
-          className="rounded-xl border px-4 py-3"
-        >
+        <button type="button" className="rounded-xl border px-4 py-3">
           삭제
         </button>
       </div>
