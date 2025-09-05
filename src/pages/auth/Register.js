@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useAuth } from "@/features/auth/AuthContext";
+
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../features/auth/AuthContext";
 
 export default function Register() {
   const { register } = useAuth();
