@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/header-and-footer/Header";
 import Footer from "./components/header-and-footer/Footer";
-import Home from "./pages/Main/Home";
+import Home from "./pages/main/Home";
 import InvitationCards from "./pages/invitation/InvitationCards";
 import InvitationAdd from "./pages/invitation/InvitationAdd";
 import InvitationList from "./pages/invitation/InvitationList";

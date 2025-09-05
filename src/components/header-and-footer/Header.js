@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Petals } from "../../utils/Petals";
-import logomain from "../../art/logomain.png"; // logo5 ?��?지 경로
+import logomain from "../../art/logomain.png"; // logo5 이미지 경로
 
 function Header() {
   return (
@@ -20,7 +20,7 @@ function Header() {
         justifyContent: "space-between",
       }}
     >
-      {/* 로고 ?�역 */}
+      {/* 로고 영역 */}
       <div style={{ marginLeft: "40px" }}>
         <Link to="/">
           <img
@@ -33,7 +33,7 @@ function Header() {
 
       <Petals />
 
-      {/* ?�비게이??메뉴 */}
+      {/* 네비게이션 메뉴 */}
       <nav
         style={{
           display: "flex",
@@ -46,13 +46,13 @@ function Header() {
       >
         {[
           { to: "/", label: "Home" },
-          { to: "/InvitationCards", label: "모바??�?��???�자?? },
-          { to: "/ticket", label: "?�권" },
-          { to: "/letter", label: "?��?봉투" },
-          { to: "/frame", label: "?�자" },
-          { to: "/Review", label: "고객?�기" },
-          { to: "/FAQ", label: "?�주 묻는 질문" },
-          { to: "/login", label: "로그?? },
+          { to: "/InvitationCards", label: "모바일 청첩장 디자인" },
+          { to: "/ticket", label: "식권" },
+          { to: "/letter", label: "편지봉투" },
+          { to: "/frame", label: "액자" },
+          { to: "/Review", label: "고객후기" },
+          { to: "/FAQ", label: "자주 묻는 질문" },
+          { to: "/login", label: "로그인" },
         ].map((item) => (
           <Link
             key={item.to}
@@ -70,10 +70,10 @@ function Header() {
         ))}
       </nav>
 
-      {/* ?�른�??�백??�?div */}
+      {/* 오른쪽 여백용 빈 div */}
       <div style={{ width: "60px", marginRight: "20px" }} />
 
-      {/* Hover ?�니메이???��???*/}
+      {/* Hover 애니메이션 스타일 */}
       <style>
         {`
           .menu-link::after {
