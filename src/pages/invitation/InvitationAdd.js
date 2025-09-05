@@ -1,0 +1,164 @@
+// src/components/InvitationAdd.jsx
+import React, { useMemo, useState } from "react";
+import { Calendar } from "./Calendar";
+import "../../css/InvitationAdd.css";
+import { Link, useNavigate } from "react-router-dom";
+import { loadInvList, saveInvList } from "../../utils/invStore";
+import { FormSections } from "./FormSections";
+import { FormatAll } from "./FormatAll";
+
+/* ================= Î©îÏù∏: InvitationAdd ================= */
+export default function InvitationAdd() {
+  const navigate = useNavigate();
+
+  // 1) ?®Ïùº ?åÏä§: Î°úÏª¨?§ÌÜ†Î¶¨Ï??êÏÑú Í∏∞Ï°¥ Î¶¨Ïä§??Î°úÎìú
+  const [invData, setInvData] = useState(() => loadInvList());
+
+  // 2) ?†Í∑ú Ïπ¥Îìú??ino Í≥ÑÏÇ∞ (?ÑÏû¨ invData Í∏∞Ï?)
+  const nextIno = useMemo(() => {
+    if (Array.isArray(invData) && invData.length > 0) {
+      const maxIno = Math.max(...invData.map(({ ino }) => ino || 0));
+      return maxIno + 1;
+    }
+    return 1;
+  }, [invData]);
+
+  // 3) ?†Í∑ú Ïπ¥Îìú ?ÖÎ†• ?ÅÌÉú
+  const [ino] = useState(nextIno);
+  const [date, setDate] = useState("2025-09-01");
+  const [time, setTime] = useState("12:00");
+  const [groomName, setGroomName] = useState("?çÍ∏∏??);
+  const [brideName, setBrideName] = useState("ÍπÄ?ÅÌù¨");
+  const [bg, setBg] = useState("#FFFFFF");
+  const [title1, setTitle1] = useState("?åÏ§ë??Î∂ÑÎì§??Ï¥àÎ??©Îãà??);
+  const [content, setContent] = useState(
+    `?Ä?????¨Îûå???ëÏ? ÎßåÎÇ®??
+
+?¨Îûë??Í≤∞Ïã§???¥Î£®??
+
+?åÏ§ë??Í≤∞Ìòº?ùÏùÑ ?¨Î¶¨Í≤??òÏóà?µÎãà??
+
+?âÏÉù ?úÎ°ú Í∑Ä?òÍ≤å ?¨Í∏∞Î©?
+Ï≤?ÎßàÏùå Í∑∏Î?Î°?Ï°¥Ï§ë?òÍ≥† Î∞∞Î†§?òÎ©∞ ?¥Í≤†?µÎãà??
+
+?§Î°úÏßÄ ÎØøÏùåÍ≥??¨Îûë???ΩÏÜç?òÎäî ??
+?§ÏÖî??Ï∂ïÎ≥µ??Ï£ºÏãúÎ©????ÜÎäî Í∏∞ÏÅ®?ºÎ°ú
+Í∞ÑÏßÅ?òÍ≤†?µÎãà??`
+  );
+
+  const fmt = FormatAll(date, time);
+
+  // 4) Ï∂îÍ? ?∏Îì§?? Î°úÏª¨ ?ÅÌÉú + Î°úÏª¨?§ÌÜ†Î¶¨Ï????Ä????Î™©Î°ù?ºÎ°ú ?¥Îèô
+  const handleAdd = () => {
+    const newItem = {
+      ino,
+      date,
+      time,
+      groomName,
+      brideName,
+      bg,
+      title1,
+      content,
+    };
+    const addedData = [...(invData || []), newItem];
+    setInvData(addedData);
+    saveInvList(addedData);
+    navigate("/invitation-list");
+  };
+
+  return (
+    <div className="invitation-edit ie-page">
+      {/* ?ºÏ™Ω: ÎØ∏Î¶¨Î≥¥Í∏∞ */}
+      <div key={ino} className="preview-pane ie-preview">
+        <div className="phone-frame" aria-label="Î™®Î∞î??Ï≤?≤©??ÎØ∏Î¶¨Î≥¥Í∏∞">
+          <div className="phone-notch" aria-hidden="true" />
+          <div
+            className="phone-canvas"
+            style={{ ["--preview-bg"]: bg }} // CSS Î≥Ä???àÏ†Ñ ÏßÄ??
+          >
+            <div className="phone-scroll">
+              {/* ?ÅÎã® ?†Ïßú/?îÏùº */}
+              <div className="section section--tight text-center">
+                <h2 className="meta meta--upper">{fmt.dateSlash}</h2>
+                <h2 className="meta meta--upper">{fmt.weekdayUpperEn}</h2>
+              </div>
+
+              {/* ?¥Î¶Ñ */}
+              <p className="names">
+                <span className="name">{groomName}</span>
+                <span className="dot">¬∑</span>
+                <span className="name">{brideName}</span>
+              </p>
+
+              {/* ?úÍµ≠???†Ïßú/?úÍ∞Ñ ?¨Îß∑ */}
+              <div className="text-center">
+                <h2 className="meta">{fmt.koDateTimeFull}</h2>
+              </div>
+
+              {/* Íµ¨Î∂Ñ??*/}
+              <div className="divider" aria-hidden="true" />
+
+              {/* ?åÍ∞ú/Î≥∏Î¨∏ */}
+              <div className="intro">
+                <p className="intro__tag">INVITATION</p>
+                <p className="intro__title">{title1}</p>
+                <p className="intro__body">{content}</p>
+              </div>
+
+              {/* ?òÎã® ?¨Îß∑ */}
+              <div className="section text-center">
+                <h2 className="meta meta--upper">{fmt.dateDot}</h2>
+                <h2 className="meta">{fmt.koDateTimeTail}</h2>
+              </div>
+
+              {/* ?¨Î†• */}
+              <div className="section section--calendar">
+                <Calendar value={date} onChange={setDate} />
+              </div>
+            </div>
+          </div>
+          <div className="phone-homebar" aria-hidden="true" />
+        </div>
+      </div>
+
+      {/* ?§Î•∏Ï™? ?ÖÎ†• ??*/}
+      <div className="form-pane ie-form">
+        <header className="form-header">
+          <h2 className="form-title">Ï≤?≤©???ïÎ≥¥ ?ÖÎ†•</h2>
+          <p className="form-sub">
+            ?¥Ïö©???ÖÎ†•?òÎ©¥ ?ºÏ™Ω ÎØ∏Î¶¨Î≥¥Í∏∞??Ï¶âÏãú Î∞òÏòÅ?©Îãà??
+          </p>
+        </header>
+
+        <FormSections
+          // ?åÎßà
+          bg={bg}
+          setBg={setBg}
+          // Í∏∞Î≥∏ ?ïÎ≥¥
+          date={date}
+          setDate={setDate}
+          time={time}
+          setTime={setTime}
+          groomName={groomName}
+          setGroomName={setGroomName}
+          brideName={brideName}
+          setBrideName={setBrideName}
+          // ?∏ÏÇ¨Îß?
+          title1={title1}
+          setTitle1={setTitle1}
+          content={content}
+          setContent={setContent}
+        />
+
+        <div className="sticky-actions">
+          <button type="button" className="btn btn-primary" onClick={handleAdd}>
+            Ï∂îÍ??òÍ∏∞
+          </button>
+          <Link to="/InvitationList" className="btn btn-ghost">
+            Î™©Î°ù?ºÎ°ú
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}

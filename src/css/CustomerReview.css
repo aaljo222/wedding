@@ -1,0 +1,199 @@
+.cr-container {
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: "Noto Sans KR", "맑은 고딕", sans-serif;
+  background: #fff;
+  padding: 40px 20px;
+}
+
+.cr-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.cr-count {
+  color: #fa7e12;
+}
+
+.cr-controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cr-photo-filter {
+  font-size: 15px;
+  color: #2c2c2c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.cr-form {
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.cr-input,
+.cr-textarea,
+.cr-file-input {
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 15px;
+}
+
+.cr-input.name {
+  width: 120px;
+}
+.cr-input.date {
+  width: 140px;
+  cursor: pointer;
+}
+.cr-textarea {
+  width: 400px;
+  resize: none;
+}
+.cr-file-input {
+  width: 180px;
+}
+
+.cr-thumb-preview {
+  display: flex;
+  gap: 6px;
+}
+
+.cr-thumb-item {
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+
+.cr-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.cr-thumb-remove {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  color: #999;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cr-btn {
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  padding: 7px 16px;
+  cursor: pointer;
+}
+
+.cr-btn.add {
+  background: #fa7e12;
+  color: #fff;
+}
+
+.cr-btn.cancel {
+  background: #eee;
+  color: #333;
+}
+
+.cr-list .cr-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #ededed;
+}
+
+.cr-item:last-child {
+  border-bottom: none;
+}
+
+.cr-item-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cr-meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #888;
+}
+
+.cr-name {
+  font-weight: bold;
+  color: #888;
+}
+.cr-date {
+  margin-top: 4px;
+  color: #c2c2c2;
+}
+
+.cr-comment {
+  font-size: 15px;
+  color: #232323;
+  margin: 12px 0;
+}
+
+.cr-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cr-photo-cell {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: 7px;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.cr-photo-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.cr-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cr-actions .cr-btn.edit {
+  background: #fff;
+  color: #ffa412;
+  border: 1px solid #ffa412;
+  padding: 4px 12px;
+  font-size: 13px;
+}
+
+.cr-actions .cr-btn.delete {
+  background: #fff;
+  color: #888;
+  border: 1px solid #eee;
+  padding: 4px 12px;
+  font-size: 13px;
+}

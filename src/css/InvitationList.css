@@ -1,0 +1,329 @@
+/* src/css/InvitationList.css */
+
+/* ===== 페이지 & 그리드 ===== */
+.wl-page {
+  min-height: 100vh;
+  padding: 20px 16px 96px;
+  background: radial-gradient(
+      1200px 600px at 50% -20%,
+      #fff6fb 0%,
+      #f8fbff 40%,
+      #fafafa 100%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%);
+}
+
+.wl-grid {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .wl-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .wl-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ===== 비어있을 때 ===== */
+.wl-empty {
+  max-width: 520px;
+  margin: 16vh auto 0;
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.08);
+  padding: 28px 24px;
+  text-align: center;
+}
+.wl-empty h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  color: #1f2937;
+}
+.wl-empty p {
+  margin: 0 0 16px;
+  color: #6b7280;
+}
+
+/* ===== 카드 ===== */
+.wl-card {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  border-radius: 24px;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.09);
+  overflow: hidden;
+  position: relative;
+  animation: wl-pop 0.25s ease-out;
+}
+@keyframes wl-pop {
+  from {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 코너 장식(꽃잎 느낌) */
+.wl-card::before,
+.wl-card::after {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(
+      circle at 70% 30%,
+      rgba(255, 255, 255, 0.9) 0,
+      rgba(255, 255, 255, 0) 70%
+    ),
+    radial-gradient(
+      circle at 30% 70%,
+      rgba(255, 200, 220, 0.25) 0,
+      rgba(255, 200, 220, 0) 60%
+    );
+  filter: blur(2px);
+  pointer-events: none;
+}
+.wl-card::before {
+  top: -24px;
+  left: -24px;
+}
+.wl-card::after {
+  bottom: -24px;
+  right: -24px;
+}
+
+/* 리본 날짜 배지 */
+.wl-ribbon {
+  position: absolute;
+  top: 12px;
+  left: -8px;
+  background: #111827;
+  color: #fff;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.25);
+  z-index: 2;
+}
+
+/* 로고가 들어갈 커버 영역 */
+.wl-cover,
+.wl-cover--pattern {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 375 / 230;
+  overflow: hidden;
+  /* WL-COVER에는 배경색이, WL-COVER--PATTERN에는 배경 패턴이 적용됩니다. */
+  background: #fff;
+}
+.wl-cover > img:not(.wl-logo-in-card) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.02);
+}
+.wl-cover--pattern {
+  background: radial-gradient(
+      150px 80px at 20% 20%,
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0)
+    ),
+    radial-gradient(
+      180px 100px at 80% 60%,
+      rgba(255, 210, 223, 0.35),
+      rgba(255, 210, 223, 0)
+    ),
+    linear-gradient(135deg, #ffeef2 0%, #eef6ff 100%);
+}
+/* 로고 자체 스타일 (커버 영역 중앙에 위치) */
+.wl-logo-in-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* 로고 크기 설정 */
+  width: 150px; /* 로고 너비. 필요에 따라 조절하세요. */
+  height: auto;
+  /* 로고가 다른 요소에 가려지지 않도록 z-index를 높게 설정합니다. */
+  z-index: 3;
+  pointer-events: none; /* 버튼 클릭 간섭 방지 – 선택사항 */
+}
+
+/* 이름 스타일(로고 아래에 오도록) */
+.wl-names {
+  margin: 14px 16px 0; /* ✨ 상단 여백을 추가하여 로고와 겹치지 않게 합니다. */
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: 0.02em;
+}
+.wl-name {
+  font-family: "Noto Serif KR", "Pretendard", serif;
+}
+.wl-amp {
+  margin: 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  opacity: 0.65;
+  font-weight: 400;
+}
+
+/* 날짜/요일 메타 */
+.wl-meta {
+  margin: 8px auto 0;
+  padding: 0 16px;
+  max-width: 320px;
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #6b7280;
+  font-size: 13px;
+}
+.wl-weekday {
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+.wl-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e5e7eb;
+}
+
+/* 본문 */
+.wl-intro {
+  padding: 10px 18px 2px;
+  text-align: center;
+}
+.wl-tag {
+  font-size: 10px;
+  color: #9ca3af;
+  letter-spacing: 0.28em;
+  margin-bottom: 6px;
+}
+.wl-title {
+  font-family: "Noto Serif KR", serif;
+  font-size: 18px;
+  color: #111827;
+  margin: 4px 0 8px;
+}
+.wl-body {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #4b5563;
+  white-space: pre-line;
+  margin: 0 auto;
+  max-width: 90%;
+}
+
+/* 버튼 그룹 */
+.wl-actions {
+  margin-top: auto; /* 본문 이후 자동으로 아래 붙음 */
+  padding: 14px 16px 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  border-top: 1px solid #f0f0f0; /* 구분선 느낌 */
+  background: #fff; /* 카드 배경 유지 */
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/* 버튼 공통 */
+.wl-btn {
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.06s ease, box-shadow 0.18s ease,
+    background-color 0.2s ease, border-color 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.wl-btn:active {
+  transform: translateY(1px);
+}
+
+/* 버튼 색상 */
+.wl-btn--primary {
+  background: #6d5ce7;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(109, 92, 231, 0.25);
+}
+.wl-btn--primary:hover {
+  background: #5c4fd8;
+}
+
+.wl-btn--accent {
+  background: #10b981;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(16, 185, 129, 0.22);
+}
+.wl-btn--accent:hover {
+  background: #059669;
+}
+
+.wl-btn--ghost {
+  background: #ffffff;
+  color: #374151;
+  border-color: #e5e7eb;
+}
+.wl-btn--ghost:hover {
+  border-color: #d1d5db;
+  background: #fafafa;
+}
+
+/* 리스트 하단 버튼 영역 */
+.wl-add-container {
+  margin: 24px auto 40px;
+  text-align: center;
+}
+
+.wl-btn--large {
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 14px;
+}
+
+/* 카드 전체를 세로 플렉스: 위→아래 배치 */
+.wl-card {
+  display: flex; /* ← grid → flex 로 교체 */
+  flex-direction: column;
+  min-height: 640px; /* 카드가 너무 낮으면 적당히 조절 (예: 600~680px) */
+}
+
+/* 버튼 영역: 카드 맨 아래로 밀착 */
+.wl-actions {
+  margin-top: auto; /* 남은 공간을 위에서 먹고, 아래로 밀착 */
+  position: static !important; /* 혹시 남아있을 sticky 무효화 */
+  padding: 14px 16px 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  border-top: 1px solid #f0f0f0;
+  background: #fff;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}

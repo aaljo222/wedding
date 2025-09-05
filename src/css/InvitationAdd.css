@@ -1,0 +1,327 @@
+/* ===== 페이지 레이아웃 ===== */
+.ie-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 20px 16px 28px;
+  background: radial-gradient(
+      1200px 600px at 50% -20%,
+      #fff6fb 0%,
+      #f8fbff 40%,
+      #fafafa 100%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%);
+}
+
+/* 변경: 폼 컬럼 최소/최대 폭을 늘림 */
+@media (min-width: 1024px) {
+  .ie-page {
+    grid-template-columns: 420px minmax(520px, 760px);
+    gap: 24px;
+    padding: 24px 24px 32px;
+    justify-content: center;
+  }
+}
+
+/* (선택) 폼 자체 최대폭 상한을 넉넉히 허용 */
+.ie-form {
+  max-width: 760px;
+}
+
+/* 내용 입력칸 기본 높이 업 + 드래그로 더 키울 수 있게 */
+.ie-form textarea {
+  min-height: 180px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+/* ===== 미리보기 (좌측) ===== */
+.ie-preview {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+  display: grid;
+  place-items: center;
+}
+
+/* 레이블 다음에 입력 컨트롤이 오는 행을 자동으로 2열 그리드로 배치 */
+.ie-form div:has(> label + input),
+.ie-form div:has(> label + textarea),
+.ie-form div:has(> label + select) {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr); /* 레이블 고정폭 + 나머지 전부 */
+  align-items: start; /* textarea 상단정렬 */
+  gap: 12px;
+}
+
+/* 컨트롤은 그리드의 2열을 가득 채움 */
+.ie-form input,
+.ie-form select,
+.ie-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 내용 칸(텍스트영역) 높이 여유 */
+.ie-form textarea {
+  min-height: 220px;
+  line-height: 1.6;
+  resize: vertical; /* 드래그로 더 키울 수 있게 */
+}
+
+/* 아이폰 느낌의 프레임 */
+.phone-frame {
+  width: 370px;
+  height: 780px;
+  border-radius: 36px;
+  background: #0b0e13;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+  padding: 14px;
+  position: relative;
+}
+
+.phone-notch {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 18px;
+  background: #0b0e13;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.phone-homebar {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  border-radius: 4px;
+  background: #c7cad1;
+  opacity: 0.7;
+}
+
+/* 화면 영역 */
+.phone-canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  background: radial-gradient(
+      150px 80px at 20% 20%,
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0)
+    ),
+    radial-gradient(
+      180px 100px at 80% 60%,
+      rgba(255, 210, 223, 0.35),
+      rgba(255, 210, 223, 0)
+    ),
+    linear-gradient(135deg, #ffeef2 0%, #eef6ff 100%);
+  background: var(--preview-bg, #f7f7f7);
+  display: grid;
+}
+
+.phone-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 18px 16px 20px;
+}
+
+/* ===== 텍스트 & 블록 ===== */
+.text-center {
+  text-align: center;
+}
+
+.section {
+  margin: 14px 0;
+}
+.section--tight {
+  margin: 6px 0 8px;
+}
+
+.meta {
+  color: #5b6172;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+.meta--upper {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+}
+
+.names {
+  margin: 8px 0 4px;
+  text-align: center;
+  font-size: 22px;
+  color: #1f2937;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.names .name {
+  font-family: "Noto Serif KR", "Pretendard", serif;
+}
+.names .dot {
+  margin: 0 8px;
+  opacity: 0.6;
+}
+
+.divider {
+  width: 160px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    #dcdfe6 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  margin: 10px auto 6px;
+}
+
+/* 인사말 */
+.intro {
+  padding: 6px 8px;
+  text-align: center;
+}
+.intro__tag {
+  font-size: 10px;
+  color: #9ca3af;
+  letter-spacing: 0.28em;
+  margin-bottom: 6px;
+}
+.intro__title {
+  font-family: "Noto Serif KR", serif;
+  font-size: 18px;
+  color: #111827;
+  margin: 4px 0 10px;
+  font-weight: 700;
+}
+.intro__body {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #4b5563;
+  white-space: pre-line; /* 줄바꿈 그대로 표시 */
+  margin: 0 auto;
+  max-width: 92%;
+}
+
+/* 달력 섹션 */
+.section--calendar {
+  margin-top: 10px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 10px 8px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== 폼 (우측) ===== */
+.ie-form {
+  background: #ffffffcc;
+  backdrop-filter: blur(4px);
+  border-radius: 20px;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.08);
+  padding: 18px 16px 80px;
+}
+
+@media (min-width: 1024px) {
+  .ie-page {
+    /* 좌: 프리뷰 420px 고정 / 우: 360~520px 반응형 */
+    grid-template-columns: 420px minmax(360px, 520px);
+    gap: 24px; /* 조금 더 타이트하게 */
+    padding: 24px 24px 32px;
+    justify-content: center; /* 전체를 가운데로 */
+  }
+}
+
+.form-header {
+  margin-bottom: 14px;
+}
+.form-title {
+  margin: 0;
+  font-size: 18px;
+  color: #111827;
+  font-weight: 800;
+}
+.form-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ===== 폼 액션 (하단 고정) - 정렬/순서 보강 ===== */
+.sticky-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 좌우 반반 */
+  gap: 10px;
+  align-items: stretch;
+}
+
+/* 버튼이 셀을 가득 채우도록 */
+.sticky-actions a.btn,
+.sticky-actions button.btn,
+.sticky-actions > .btn {
+  width: 100%;
+}
+
+/* 순서 강제: 파란 버튼(Primary) 왼쪽, 하얀 버튼(Ghost) 오른쪽 */
+.sticky-actions .btn-primary {
+  grid-column: 1;
+}
+.sticky-actions .btn-ghost {
+  grid-column: 2;
+}
+
+/* ===== 버튼 공통 ===== */
+.btn {
+  height: 46px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  font-weight: 800;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.06s ease, box-shadow 0.18s ease,
+    background-color 0.2s ease, border-color 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: #6d5ce7;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(109, 92, 231, 0.22);
+}
+.btn-primary:hover {
+  background: #5c4fd8;
+}
+
+.btn-ghost {
+  background: #ffffff;
+  color: #374151;
+  border-color: #e5e7eb;
+}
+.btn-ghost:hover {
+  border-color: #d1d5db;
+  background: #fafafa;
+}
+
+/* ===== 스크롤 & 유틸 ===== */
+.phone-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.phone-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 6px;
+}

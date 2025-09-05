@@ -1,0 +1,82 @@
+/* 컨테이너 간격 */
+.form-sections {
+  display: grid;
+  gap: 12px;
+}
+
+/* 섹션 내부 그리드 */
+.section-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* 한 줄(레이블 + 인풋) */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 라벨 */
+.label {
+  width: 96px; /* 기존 w-24 */
+  font-size: 0.875rem; /* text-sm */
+  color: #4b5563; /* text-gray-600 */
+  flex-shrink: 0;
+}
+
+/* 인풋 공통 */
+.input {
+  height: 40px; /* h-10 */
+  flex: 1;
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  border-radius: 6px;
+  padding: 0 8px;
+  font-size: 0.95rem;
+  color: #111827;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.input:focus {
+  border-color: #a78bfa; /* 보라 계열 포커스 */
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+}
+
+/* 컬러 스와치 리스트 */
+.color-swatch-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-left: 96px; /* 기존 pl-24 */
+}
+
+/* 컬러 스와치 버튼 */
+.color-swatch {
+  --swatch-color: #ffffff;
+  width: 28px; /* w-7 */
+  height: 28px; /* h-7 */
+  border-radius: 9999px; /* rounded-full */
+  border: 1px solid #e5e7eb; /* border-gray-200 */
+  background: var(--swatch-color);
+  cursor: pointer;
+  transition: transform 0.06s ease, box-shadow 0.15s ease;
+}
+
+.color-swatch:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.color-swatch:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+}

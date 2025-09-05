@@ -1,0 +1,209 @@
+/* 전체 컨테이너를 화면 너비 전체로 사용하도록 수정 */
+.frame-container {
+  padding: 0;
+  max-width: none;
+  margin: 0;
+}
+
+/* 프레임 헤더 스타일 */
+.frame-header {
+  margin-top: 30px; /* 이 부분을 추가하여 이미지를 아래로 내립니다. */
+  margin-bottom: 20px;
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* 헤더 이미지 스타일 */
+.frame-header img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 상품 그리드 레이아웃 */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  justify-items: center;
+  padding: 0 40px; /* 320px -> 40px로 줄여서 여백을 자연스럽게 만듭니다. */
+  margin-top: 30px;
+  margin-bottom: 60px;
+  max-width: 1400px;
+  margin: 0 auto; /* 그리드를 가운데 정렬합니다. */
+}
+
+/* 상품 그리드 레이아웃 (반응형) */
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: repeat(1, 1fr);
+    padding: 0 10px;
+  }
+}
+
+/* 상품 카드 스타일 */
+.product-card {
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-image {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  display: block;
+}
+
+.product-info {
+  padding: 15px;
+  text-align: center;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  word-break: keep-all;
+  white-space: normal;
+  line-height: 1.4;
+  height: 3.6em; /* 2줄까지 보이게 고정 */
+  overflow: hidden;
+}
+
+.price {
+  font-size: 14px;
+  display: flex; /* flex로 변경 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  gap: 10px;
+  align-items: center;
+}
+
+.original {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.sale {
+  color: #d43f3f;
+  font-weight: bold;
+}
+
+/* --- 가운데 정렬 오버라이드 --- */
+.product-card .product-info {
+  text-align: center; /* 제목/문단 기본 가운데 */
+}
+
+.product-card .price {
+  justify-content: center; /* 가격 플렉스 가운데 */
+  text-align: center;
+}
+
+/* 수량 줄 가운데 정렬 */
+.product-card .qty-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* 라벨-셀렉트 간격 */
+}
+
+/* 수량 라벨/셀렉트 크기 미세 조정 */
+.product-card .qty-label {
+  font-size: 13px;
+  color: #4b5563; /* gray-600 */
+  white-space: nowrap;
+}
+
+.product-card .qty-select {
+  width: 80px; /* w-20 */
+  height: 32px; /* h-8  */
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db; /* gray-300 */
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+/* === 여백 축소 & 2줄 말줄임 오버라이드 === */
+
+/* 카드 내부 기본 패딩 살짝 줄이기 */
+.product-card .product-info {
+  padding: 12px 14px 12px;
+}
+
+/* 제목: 고정 높이 제거 + 2줄 말줄임 + 여백 축소 */
+.title {
+  margin: 4px 0 4px !important; /* 위/아래 여백 ↓ */
+  height: auto !important; /* 고정 높이 제거 */
+}
+.title.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 2줄 제한 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 가격: 간격/여백 축소 */
+.price.tight {
+  gap: 6px; /* 가격-원가 간격 ↓ */
+  margin-top: 4px; /* 제목과의 간격 ↓ */
+}
+
+/* 수량 줄: 전체를 한 줄로, 여백 최소화 */
+.qty-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px; /* 가격과 간격 ↓ */
+}
+.qty-label {
+  font-size: 13px;
+  color: #4b5563;
+  white-space: nowrap;
+}
+.qty-select {
+  width: 76px; /* 작게 */
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+/* CTA 버튼 위 간격 축소 */
+.cta-wrap {
+  margin-top: 10px;
+}
+
+/* (선택) 카드 그리드 세로 간격 더 붙이고 싶으면 아래 사용
+.product-grid { row-gap: 12px; } */
