@@ -1,6 +1,6 @@
 // src/pages/Invitation/CartList.jsx
 import React from "react";
-import { useCart } from "../invitation2/CartProvider";
+import { useCart } from "../invitation/CartProvider";
 import { useNavigate } from "react-router-dom";
 
 const currency = (n) => (n ?? 0).toLocaleString("ko-KR");

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../css/Frame.css";
 import { products } from "../../data/FrameData";
-import { useCart } from "../invitation2/CartProvider";
+import { useCart } from "../invitation/CartProvider";
 import { useNavigate } from "react-router-dom";
 
 const currency = (n) => (n ?? 0).toLocaleString("ko-KR");

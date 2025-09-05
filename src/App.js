@@ -19,7 +19,7 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import { AuthProvider } from "./features/auth/AuthContext";
 import RequireAuth from "./pages/auth/RequireAuth";
-import { CartProvider } from "./pages/invitation2/CartProvider";
+import { CartProvider } from "./pages/invitation/CartProvider";
 
 const HEADER_HEIGHT = 60;
 

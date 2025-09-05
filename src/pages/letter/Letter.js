@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../css/Ticket.css";
 import { ticketImages } from "../../data/LetterData";
-import { useCart } from "../invitation2/CartProvider";
+import { useCart } from "../invitation/CartProvider";
 
 // "12,900원" → 12900
 const parsePrice = (v) => Number(String(v).replace(/[^\d]/g, "")) || 0;
