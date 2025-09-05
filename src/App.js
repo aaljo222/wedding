@@ -54,11 +54,20 @@ export default function App() {
                   </RequireAuth>
                 }
               />
-              <Route path="/cart-list" element={<CartList />} />
+              <Route
+                path="/cartList"
+                element={<Navigate to="/cart-list" replace />}
+              />
               <Route path="/order-complete" element={<OrderComplete />} />
-              <Route path="/review" element={<Review />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/faq-query" element={<InquiryPage />} />
+              <Route
+                path="/Review"
+                element={<Navigate to="/review" replace />}
+              />
+              <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
+              <Route
+                path="/FAQquery"
+                element={<Navigate to="/faq-query" replace />}
+              />
               <Route path="/ticket" element={<Ticket />} />
               <Route path="/letter" element={<Letter />} />
               <Route path="/frame" element={<Frame />} />
