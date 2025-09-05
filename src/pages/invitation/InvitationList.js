@@ -9,21 +9,8 @@ export default function InvitationList() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
-  const load = async () => {
-    try {
-      setLoading(true);
-      setErr("");
-      const list = await listInvitations();
-      setInvData(Array.isArray(list) ? list : []);
-    } catch (e) {
-      setErr(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    load();
+    (async () => setInvData(await listInvitations()))();
   }, []);
 
   const onDelete = async (id) => {

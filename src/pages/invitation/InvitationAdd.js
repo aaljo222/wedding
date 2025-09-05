@@ -26,16 +26,20 @@ export default function InvitationAdd() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setSaving(true);
-      setErr("");
-      await createInvitation(form);
-      nav("/invitation-list");
-    } catch (e) {
-      setErr(e.message);
-    } finally {
-      setSaving(false);
-    }
+    // 최소 title 은 꼭 보내세요. title 없으면 400 반환하게 해둠
+    await createInvitation({
+      title,
+      price,
+      groomName,
+      brideName,
+      date,
+      time,
+      cover,
+      bg,
+      content,
+      title1,
+    });
+    navigate("/invitation-list");
   };
 
   return (

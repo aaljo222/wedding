@@ -15,8 +15,11 @@ export default function Login() {
     e.preventDefault();
     setErr("");
     try {
-      await login(form);
-      nav("/"); // 로그인 후 이동 경로
+      const user = await login(form); // ✅ user 반환 받음
+      const display =
+        user?.name || (user?.email ? user.email.split("@")[0] : "사용자");
+      alert(`${display}님, 로그인되었습니다.`); // ✅ 알림
+      nav("/"); // 원하는 경로로 이동
     } catch (e) {
       setErr(e.message);
     }
@@ -28,24 +31,24 @@ export default function Login() {
       {err && <p className="text-red-600 mb-2">{err}</p>}
       <form onSubmit={onSubmit} className="space-y-3">
         <input
-          className="w-full border p-2 rounded"
           name="email"
           placeholder="이메일"
           onChange={onChange}
+          className="w-full border p-2 rounded"
         />
         <input
-          className="w-full border p-2 rounded"
           name="password"
           type="password"
           placeholder="비밀번호"
           onChange={onChange}
+          className="w-full border p-2 rounded"
         />
         <button className="w-full bg-black text-white rounded py-2">
           로그인
         </button>
       </form>
       <p className="mt-3 text-sm">
-        아직 계정이 없나요?{" "}
+        계정이 없나요?{" "}
         <Link to="/register" className="text-blue-600 underline">
           회원가입
         </Link>
