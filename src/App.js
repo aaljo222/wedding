@@ -1,5 +1,10 @@
 // src/App.js
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Header from "./components/header-and-footer/Header";
 import Footer from "./components/header-and-footer/Footer";
 import Home from "./pages/main/Home";
