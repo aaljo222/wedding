@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { StarRating } from "../../utils/ReviewStarRating";
 
-function ReviewForm({ initialData, onSubmit, onCancel }) {
+export default function ReviewForm({ initialData, onSubmit, onCancel }) {
   const isEdit = Boolean(initialData);
   const [submitting, setSubmitting] = useState(false);
 
@@ -10,9 +10,8 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
   const today = () => new Date().toISOString().split("T")[0];
 
   const [review, setReview] = useState({
-    // 서버/클라 모두 호환되는 id 키 유지
-    id: null, // 프론트에서 쓰는 id
-    _id: undefined, // 서버가 준 Mongo _id
+    id: null,
+    _id: undefined,
     name: "",
     date: "",
     rating: 5,
@@ -20,7 +19,6 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
     photos: [],
   });
 
-  // initialData 들어오면 폼 채우기 (+ 날짜/ID 정규화)
   useEffect(() => {
     if (!initialData) {
       setReview({
@@ -36,7 +34,7 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
     }
     setReview({
       id: initialData.id ?? String(initialData._id ?? ""),
-      _id: initialData._id, // 서버 수정 시 필요
+      _id: initialData._id,
       name: initialData.name ?? "",
       date: toDateInput(initialData.date) || "",
       rating: Number(initialData.rating ?? 5),
@@ -67,7 +65,7 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
     Promise.all(readPromises).then((urls) => {
       setReview((prev) => ({
         ...prev,
-        photos: [...prev.photos, ...urls].slice(0, 5), // 최대 5장
+        photos: [...prev.photos, ...urls].slice(0, 5),
       }));
     });
   };
@@ -86,16 +84,13 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
 
     setSubmitting(true);
     try {
-      // API 형식에 맞게 페이로드 정리
       const payload = {
         ...review,
-        // input용 YYYY-MM-DD → 서버에서도 바로 Date 변환 가능
         date: review.date || today(),
         rating: Number(review.rating || 0),
       };
       await onSubmit(payload);
       if (!isEdit) {
-        // 추가 모드면 폼 리셋
         setReview({
           id: null,
           _id: undefined,
@@ -173,5 +168,3 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
     </form>
   );
 }
-
-export default ReviewForm;

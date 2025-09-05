@@ -4,11 +4,10 @@ import ReviewForm from "./ReviewForm";
 import ReviewList from "./ReviewList";
 import "../../css/CustomerReview.css";
 
-function CustomerReview() {
-  const getCurrentDate = () => new Date().toISOString().split("T")[0];
+export default function CustomerReview() {
+  const today = () => new Date().toISOString().split("T")[0];
 
-  // 서버에서 불러온 원본
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState([]); // 서버 원본
   const [loading, setLoading] = useState(true);
   const [photoOnly, setPhotoOnly] = useState(
     () => localStorage.getItem("photoOnlyFilter") === "true"
@@ -16,7 +15,7 @@ function CustomerReview() {
   const [editingReview, setEditingReview] = useState(null);
   const [err, setErr] = useState("");
 
-  // 서버에서 목록 로드
+  // 목록 읽기
   const fetchReviews = async () => {
     try {
       setLoading(true);
@@ -37,18 +36,22 @@ function CustomerReview() {
     fetchReviews();
   }, []);
 
-  // 토글 상태 저장
+  // 포토 필터 저장
   useEffect(() => {
     localStorage.setItem("photoOnlyFilter", photoOnly);
   }, [photoOnly]);
 
-  // ReviewList/ReviewForm 호환용: _id가 오면 id로도 복사
+  // _id → id 동시 제공(하위 컴포넌트 호환)
   const normalized = useMemo(
-    () => reviews.map((r) => ({ ...r, id: r.id ?? String(r._id ?? "") })),
+    () =>
+      (Array.isArray(reviews) ? reviews : []).map((r) => ({
+        ...r,
+        id: r.id ?? String(r._id ?? ""),
+      })),
     [reviews]
   );
 
-  // 클라이언트 필터(필요하면 서버 쿼리 ?photoOnly=1 로 바꿔도 됨)
+  // 필터링
   const filtered = photoOnly
     ? normalized.filter((r) => Array.isArray(r.photos) && r.photos.length > 0)
     : normalized;
@@ -59,10 +62,10 @@ function CustomerReview() {
       setErr("");
       const payload = {
         name: newReview.name,
-        rating: newReview.rating ?? 0,
+        rating: Number(newReview.rating ?? 0),
         comment: newReview.comment ?? "",
-        photos: newReview.photos ?? [],
-        date: newReview.date || getCurrentDate(),
+        photos: Array.isArray(newReview.photos) ? newReview.photos : [],
+        date: newReview.date || today(),
       };
       const res = await fetch("/api/reviews", {
         method: "POST",
@@ -71,7 +74,12 @@ function CustomerReview() {
       });
       const doc = await res.json();
       if (!res.ok) throw new Error(doc?.error || "리뷰 추가 실패");
+
+      // 방법 A) 방금 항목만 앞에 붙이기
       setReviews((prev) => [doc, ...prev]);
+
+      // 방법 B) 서버 정합성 우선이면 전체 재조회
+      // await fetchReviews();
     } catch (e) {
       setErr(e.message || "에러가 발생했습니다.");
     }
@@ -108,6 +116,7 @@ function CustomerReview() {
       const res = await fetch(`/api/reviews/${id}`, { method: "DELETE" });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || "리뷰 삭제 실패");
+
       setReviews((prev) =>
         prev.filter((r) => String(r._id || r.id) !== String(id))
       );
@@ -115,8 +124,6 @@ function CustomerReview() {
       setErr(e.message || "에러가 발생했습니다.");
     }
   };
-
-  const handleEdit = (review) => setEditingReview(review);
 
   return (
     <div className="cr-container">
@@ -147,11 +154,9 @@ function CustomerReview() {
 
       <ReviewList
         reviews={filtered}
-        onEdit={handleEdit}
-        onDelete={(id) => handleDelete(id)}
+        onEdit={setEditingReview}
+        onDelete={handleDelete}
       />
     </div>
   );
 }
-
-export default CustomerReview;
