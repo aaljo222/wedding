@@ -1,121 +1,113 @@
+// src/pages/review/ReviewForm.jsx
 import React, { useState, useEffect } from "react";
 import { StarRating } from "../../utils/ReviewStarRating";
 
 function ReviewForm({ initialData, onSubmit, onCancel }) {
-  // initialData가 존재하면 수정 모드, 없으면 새 리뷰 추가 모드로 설정
   const isEdit = Boolean(initialData);
+  const [submitting, setSubmitting] = useState(false);
 
-  // 폼에서 입력한 리뷰 데이터 상태 관리
+  const toDateInput = (v) => (v ? new Date(v).toISOString().split("T")[0] : "");
+  const today = () => new Date().toISOString().split("T")[0];
+
   const [review, setReview] = useState({
-    id: null, // 리뷰 고유 식별자 (추가 시 null → 부모 컴포넌트에서 Date.now()로 설정)
-    name: "", // 리뷰 작성자 이름
-    date: "", // 리뷰 작성 날짜 (YYYY-MM-DD 형식)
-    rating: 5, // 별점 (1~5)
-    comment: "", // 리뷰 내용
-    photos: [], // 첨부 이미지들의 Base64 데이터 URL 배열 (최대 5개)
+    // 서버/클라 모두 호환되는 id 키 유지
+    id: null, // 프론트에서 쓰는 id
+    _id: undefined, // 서버가 준 Mongo _id
+    name: "",
+    date: "",
+    rating: 5,
+    comment: "",
+    photos: [],
   });
 
-  // initialData가 바뀔 때 리뷰 상태를 초기화 혹은 수정 데이터로 채워 줌
+  // initialData 들어오면 폼 채우기 (+ 날짜/ID 정규화)
   useEffect(() => {
-    if (initialData) {
-      // 수정 모드 진입 시 기존 리뷰 데이터를 폼에 채워 줌
-      setReview(initialData);
-    } else {
-      // 추가 모드로 돌아갈 때는 빈 폼으로 초기화
+    if (!initialData) {
       setReview({
         id: null,
+        _id: undefined,
         name: "",
         date: "",
         rating: 5,
         comment: "",
         photos: [],
       });
+      return;
     }
+    setReview({
+      id: initialData.id ?? String(initialData._id ?? ""),
+      _id: initialData._id, // 서버 수정 시 필요
+      name: initialData.name ?? "",
+      date: toDateInput(initialData.date) || "",
+      rating: Number(initialData.rating ?? 5),
+      comment: initialData.comment ?? "",
+      photos: Array.isArray(initialData.photos) ? initialData.photos : [],
+    });
   }, [initialData]);
 
-  // 오늘 날짜를 YYYY-MM-DD 문자열로 반환하는 함수
-  // date input의 max 속성에 사용 → 미래 날짜 선택 방지
-  const getCurrentDate = () => {
-    // ISO 문자열 포맷 "2025-09-04T06:27:00.000Z" 에서 날짜 부분만 취함
-    return new Date().toISOString().split("T")[0];
-  };
-
-  // 텍스트(input, textarea) 변경 시 호출
-  // e.target.name에 해당하는 속성 (name, date, comment)에 값을 설정
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setReview((prev) => ({
-      ...prev, // 기존 상태 유지
-      [name]: value, // 변경된 필드만 덮어쓰기
-    }));
+    setReview((prev) => ({ ...prev, [name]: value }));
   };
 
-  // StarRating 컴포넌트에서 별점 클릭 시 호출
-  // rating 값을 review 상태에 반영
   const handleRating = (rating) => {
-    setReview((prev) => ({
-      ...prev,
-      rating, // 클릭한 별점으로 업데이트
-    }));
+    setReview((prev) => ({ ...prev, rating }));
   };
 
-  // 사진 파일 선택 시 호출
-  // FileReader를 이용해 파일을 Base64 URL로 변환 후 photos 배열에 추가
   const handlePhotoChange = (e) => {
-    // 다중 파일 선택 지원: FileList → 배열
-    const files = Array.from(e.target.files);
-
-    // 각 파일을 읽어 Base64 URL 문자열로 변환하는 Promise 배열 생성
+    const files = Array.from(e.target.files || []);
     const readPromises = files.map(
       (file) =>
         new Promise((resolve) => {
           const reader = new FileReader();
-          // 파일 읽기가 완료되면 Base64 문자열(reader.result)을 resolve
           reader.onloadend = () => resolve(reader.result);
-          // 파일을 Data URL(Base64)로 읽기 시작
           reader.readAsDataURL(file);
         })
     );
-
-    // 모든 파일 읽기가 끝나면 then() 블록 실행
     Promise.all(readPromises).then((urls) => {
       setReview((prev) => ({
         ...prev,
-        // 기존 photos에 신규 photos를 합친 후 최대 5개로 자름
-        photos: [...prev.photos, ...urls].slice(0, 5),
+        photos: [...prev.photos, ...urls].slice(0, 5), // 최대 5장
       }));
     });
   };
 
-  // 특정 인덱스의 사진을 제거할 때 호출
   const handlePhotoRemove = (idx) => {
     setReview((prev) => ({
       ...prev,
-      // filter로 idx와 다른 항목만 남김
       photos: prev.photos.filter((_, i) => i !== idx),
     }));
   };
 
-  // 폼 제출 시 호출
-  const handleSubmit = (e) => {
-    e.preventDefault(); // 기본 폼 제출(페이지 리로드) 방지
-    // 작성자 이름과 댓글 내용이 없으면 제출하지 않음
-    if (!review.name.trim() || !review.comment.trim()) {
-      // 필요 시 사용자에게 경고 메시지 표시 가능
-      return;
-    }
-    // 부모 컴포넌트에 onSubmit 콜백으로 리뷰 객체 전달
-    onSubmit(review);
-    // 추가 모드인 경우 폼 초기화 (수정 모드면 initialData 변경에 의해 useEffect가 처리)
-    if (!isEdit) {
-      setReview({
-        id: null,
-        name: "",
-        date: "",
-        rating: 5,
-        comment: "",
-        photos: [],
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (submitting) return;
+    if (!review.name.trim() || !review.comment.trim()) return;
+
+    setSubmitting(true);
+    try {
+      // API 형식에 맞게 페이로드 정리
+      const payload = {
+        ...review,
+        // input용 YYYY-MM-DD → 서버에서도 바로 Date 변환 가능
+        date: review.date || today(),
+        rating: Number(review.rating || 0),
+      };
+      await onSubmit(payload);
+      if (!isEdit) {
+        // 추가 모드면 폼 리셋
+        setReview({
+          id: null,
+          _id: undefined,
+          name: "",
+          date: "",
+          rating: 5,
+          comment: "",
+          photos: [],
+        });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -133,7 +125,7 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
         type="date"
         value={review.date}
         onChange={handleChange}
-        max={getCurrentDate()}
+        max={today()}
         className="cr-input date"
       />
       <StarRating rating={review.rating} setRating={handleRating} />
@@ -145,6 +137,7 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
         className="cr-textarea"
         placeholder="후기 작성"
       />
+
       <input
         type="file"
         accept="image/*"
@@ -168,7 +161,8 @@ function ReviewForm({ initialData, onSubmit, onCancel }) {
           ))}
         </div>
       )}
-      <button type="submit" className="cr-btn add">
+
+      <button type="submit" className="cr-btn add" disabled={submitting}>
         {isEdit ? "수정" : "추가"}
       </button>
       {isEdit && (

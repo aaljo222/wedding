@@ -1,36 +1,28 @@
+// src/pages/review/ReviewList.jsx
 import React from "react";
-import { StarRating } from "../../utils/ReviewStarRating";
+import ReviewItem from "./ReviewItem";
 
-function ReviewItem({ review, onEdit, onDelete }) {
+function ReviewList({ reviews = [], onEdit, onDelete }) {
+  if (!Array.isArray(reviews) || reviews.length === 0) {
+    return <p className="cr-empty">등록된 후기가 없습니다.</p>;
+  }
+
   return (
-    <div className="cr-item">
-      <div className="cr-item-header">
-        <StarRating rating={review.rating} />
-        <div className="cr-meta">
-          <span className="cr-name">{review.name}</span>
-          <span className="cr-date">{review.date}</span>
-        </div>
-      </div>
-      <p className="cr-comment">{review.comment}</p>
-      {review.photos.length > 0 && (
-        <div className="cr-photo-grid">
-          {review.photos.slice(0, 5).map((src, i) => (
-            <div key={i} className="cr-photo-cell">
-              <img src={src} alt={`리뷰${i}`} />
-            </div>
-          ))}
-        </div>
-      )}
-      <div className="cr-actions">
-        <button onClick={onEdit} className="cr-btn edit">
-          수정
-        </button>
-        <button onClick={onDelete} className="cr-btn delete">
-          삭제
-        </button>
-      </div>
+    <div className="cr-list">
+      {reviews.map((r, idx) => {
+        const id = r?._id ?? r?.id ?? idx; // _id 우선, 없으면 id, 그래도 없으면 idx
+        const key = typeof id === "string" ? id : String(id);
+        return (
+          <ReviewItem
+            key={key}
+            review={r}
+            onEdit={() => onEdit(r)}
+            onDelete={() => onDelete(id)}
+          />
+        );
+      })}
     </div>
   );
 }
 
-export default ReviewItem;
+export default ReviewList;

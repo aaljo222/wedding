@@ -1,38 +1,37 @@
-// api/invitations.js
+// api/reviews.js
 import { getDb } from "./db.js";
 import { readJson } from "./_utils.js";
 
 export default async function handler(req, res) {
   try {
     const db = await getDb();
-    const col = db.collection("invitations");
+    const col = db.collection("reviews");
 
     if (req.method === "GET") {
-      const list = await col.find({}).sort({ _id: -1 }).toArray();
+      // ?photoOnly=1 이면 사진 있는 리뷰만
+      const photoOnly = /^(1|true)$/i.test(String(req.query?.photoOnly || ""));
+      const q = photoOnly
+        ? { photos: { $exists: true, $type: "array", $ne: [] } }
+        : {};
+      const list = await col.find(q).sort({ _id: -1 }).toArray();
       return res.status(200).json(list);
     }
 
     if (req.method === "POST") {
       const body = await readJson(req);
       const doc = {
-        // 프론트에서 저장하던 필드들만 간단 예시
-        ino: body.ino, // 프론트에서 이미 생성한 식별자 사용 시
-        groomName: body.groomName,
-        brideName: body.brideName,
-        date: body.date,
-        time: body.time,
-        cover: body.cover || "",
-        bg: body.bg || "#fff8f7",
-        title1: body.title1 || "",
-        content: body.content || "",
-        options: body.options || {},
+        name: body.name || "게스트",
+        date: body.date ? new Date(body.date) : new Date(),
+        rating: Number(body.rating || 0),
+        comment: body.comment || "",
+        photos: Array.isArray(body.photos) ? body.photos : [],
         createdAt: new Date(),
       };
       const r = await col.insertOne(doc);
       return res.status(201).json({ _id: r.insertedId, ...doc });
     }
 
-    // id/ino 기반 수정/삭제
+    // id 기반 메소드: PUT/DELETE
     const id = req.query?.id || req.url.split("/").pop();
     if (!id) return res.status(400).json({ error: "id required" });
 
@@ -40,20 +39,20 @@ export default async function handler(req, res) {
 
     if (req.method === "PUT") {
       const body = await readJson(req);
-      const $set = { ...body, updatedAt: new Date() };
-      // ObjectId로 접근 시
-      const filter = ObjectId.isValid(id)
-        ? { _id: new ObjectId(id) }
-        : { ino: id };
-      await col.updateOne(filter, { $set });
+      const $set = {};
+      ["name", "rating", "comment", "photos", "date"].forEach((k) => {
+        if (body[k] !== undefined)
+          $set[k] = k === "date" ? new Date(body[k]) : body[k];
+      });
+      await col.updateOne(
+        { _id: new ObjectId(id) },
+        { $set, $currentDate: { updatedAt: true } }
+      );
       return res.status(200).json({ ok: true });
     }
 
     if (req.method === "DELETE") {
-      const filter = ObjectId.isValid(id)
-        ? { _id: new ObjectId(id) }
-        : { ino: id };
-      await col.deleteOne(filter);
+      await col.deleteOne({ _id: new ObjectId(id) });
       return res.status(200).json({ ok: true });
     }
 
