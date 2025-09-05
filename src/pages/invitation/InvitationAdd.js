@@ -1,4 +1,4 @@
-// src/pages/invitation/InvitationAdd.js
+// src/pages/invitation/InvitationAdd.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AccordionSection } from "./AccordionSection";
@@ -7,8 +7,8 @@ import { createInvitation } from "../../services/invitationsApi";
 export default function InvitationAdd() {
   const nav = useNavigate();
   const [form, setForm] = useState({
-    title: "",
-    title1: "",
+    title: "", // 노출용 제목(필수)
+    title1: "", // 카드 부제/제목(선택)
     groomName: "",
     brideName: "",
     date: "",
@@ -16,7 +16,7 @@ export default function InvitationAdd() {
     cover: "",
     bg: "#fff8f7",
     content: "",
-    price: 0,
+    price: "", // 입력은 문자열로 받고 전송 전에 숫자로 변환
     options: {},
   });
   const [saving, setSaving] = useState(false);
@@ -26,32 +26,50 @@ export default function InvitationAdd() {
     const { name, value, type } = e.target;
     setForm((v) => ({
       ...v,
-      [name]: name === "price" ? Number(value || 0) : value,
+      [name]: type === "number" ? value : value,
     }));
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setErr("");
+
+    // ✅ form에서 필요한 값 꺼내기
+    const {
+      title,
+      price,
+      groomName,
+      brideName,
+      date,
+      time,
+      cover,
+      bg,
+      content,
+      title1,
+    } = form;
+
+    if (!title.trim()) {
+      setErr("제목은 필수입니다.");
+      return;
+    }
+
     setSaving(true);
     try {
-      // 서버는 title 필수 → 비어있으면 기본값 생성
-      const safeTitle =
-        (form.title || "").trim() ||
-        [form.groomName, form.brideName].filter(Boolean).join(" & ") ||
-        "모바일 청첩장";
-
-      const payload = {
-        ...form,
-        title: safeTitle,
-        price: Number(form.price) || 0,
-      };
-
-      await createInvitation(payload);
-      alert("저장되었습니다.");
-      nav("/invitation-list");
+      await createInvitation({
+        title,
+        price: Number(price) || 0,
+        groomName,
+        brideName,
+        date,
+        time,
+        cover,
+        bg,
+        content,
+        title1,
+      });
+      nav("/invitation-list"); // ✅ useNavigate로 받은 nav 사용
     } catch (e) {
-      setErr(e.message || "저장 중 오류가 발생했습니다.");
+      setErr(e.message || "저장에 실패했습니다.");
     } finally {
       setSaving(false);
     }
