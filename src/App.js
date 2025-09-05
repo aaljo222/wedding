@@ -22,7 +22,7 @@ import InquiryPage from "./pages/faq/InquiryPage";
 import Frame from "./pages/frame/Frame";
 import Letter from "./pages/letter/Letter";
 import Ticket from "./pages/ticket/Ticket";
-import Review from "./pages/review/Review";
+import CustomerReview from "./pages/review/CustomerReview";
 import CartList from "./pages/cart/CartList";
 import OrderComplete from "./pages/cart/OrderComplete";
 import Register from "./pages/auth/Register";
@@ -98,8 +98,8 @@ export default function App() {
               <Route path="/orderComplete" element={<OrderComplete />} />
 
               {/* Review (신규/구 경로) */}
-              <Route path="/review" element={<Review />} />
-              <Route path="/Review" element={<Review />} />
+              <Route path="/review" element={<CustomerReview />} />
+              <Route path="/Review" element={<CustomerReview />} />
 
               {/* FAQ (신규/구 경로) */}
               <Route path="/faq" element={<FAQ />} />
