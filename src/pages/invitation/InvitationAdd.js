@@ -5,7 +5,7 @@ import { Calendar } from "./Calendar";
 import "../../css/InvitationAdd.css";
 import { FormatAll } from "./FormatAll";
 import { Link, useNavigate } from "react-router-dom";
-import { loadInvList, saveInvList } from "../../Util/invStore";
+import { loadInvList, saveInvList } from "../../utils/invStore";
 
 /* ================= 메인: InvitationAdd ================= */
 export default function InvitationAdd() {
