@@ -46,12 +46,12 @@ function Header() {
       >
         {[
           { to: "/", label: "Home" },
-          { to: "/InvitationCards", label: "모바일 청첩장 디자인" },
+          { to: "/invitation-cards", label: "모바일 청첩장 디자인" },
           { to: "/ticket", label: "식권" },
           { to: "/letter", label: "편지봉투" },
           { to: "/frame", label: "액자" },
-          { to: "/Review", label: "고객후기" },
-          { to: "/FAQ", label: "자주 묻는 질문" },
+          { to: "/review", label: "고객후기" },
+          { to: "/faq", label: "자주 묻는 질문" },
           { to: "/login", label: "로그인" },
         ].map((item) => (
           <Link
